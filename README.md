@@ -1,46 +1,32 @@
 # Solving the Maximum Diversity Problem Using GRASP and GRASP with Path Relinking
 
-Este repositorio contiene la formulación, implementación en **Python** y evaluación computacional de metaheurísticas aplicadas al **Maximum Diversity Problem (MDP)**, un problema de optimización combinatoria con aplicaciones en selección de carteras, localización de instalaciones e ingeniería genética.
+This repository contains the mathematical formulation, **Python** implementation, and computational evaluation of metaheuristic approaches applied to the **Maximum Diversity Problem (MDP)**, an NP-hard combinatorial optimization challenge with practical applications in portfolio selection, facility location, and genetic engineering[cite: 64, 65].
 
 ---
 
-## 📌 Contenido y Enfoque del Proyecto
+## 📌 Project Overview & Methodology
 
 1. **Greedy Randomized Adaptive Search Procedure (GRASP):**
-   - **Fase de Construcción:** Generación incremental de soluciones factibles mediante una función voraz que evalúa la contribución marginal $c(e) := \sum_{s \in S} \text{dist}(e,s)$. Selección adaptativa sobre una lista restringida de candidatos (RCL) calibrada con el parámetro de aleatoriedad $\alpha \in [0,1]$.
-   - **Fase de Búsqueda Local:** Exploración del vecindario basada en movimientos de intercambio 1 a 1 (*swap moves*: $S' := (S \setminus \{s\}) \cup \{e\}$), aplicando mejoras sucesivas hasta alcanzar un óptimo local.
+   - **Construction Phase:** Feasible solutions are built incrementally by evaluating the marginal contribution of unselected elements using $c(e) := \sum_{s \in S} \text{dist}(e,s)$[cite: 65]. Candidate elements are chosen adaptively from a Restricted Candidate List (RCL) regulated by a randomness threshold parameter $\alpha \in [0,1]$[cite: 65, 66].
+   - **Local Search Phase:** Neighborhood exploration based on 1-to-1 swap operations ($S' := (S \setminus \{s\}) \cup \{e\}$), iteratively executing improving moves until a local optimum is reached[cite: 66].
 
-2. **Intensificación mediante Path Relinking (GRASP+PR):**
-   - **Gestión del Conjunto Élite ($E$):** Mantenimiento de una población de soluciones de alta calidad y suficiente diversidad obtenidas en la fase constructiva.
-   - **Procedimiento de Path Relinking:** Exploración sistemática de trayectorias entre pares de soluciones élite (solución inicial $S_I$ y solución guía $S_G$), evaluando iterativamente intercambios de elementos entre $A := S_G \setminus S_I$ y $B := S_I \setminus S_G$ para descubrir óptimos de mayor calidad.
+2. **Intensification via Path Relinking (GRASP+PR):**
+   - **Elite Set Management ($E$):** Maintains a fixed-size pool of diverse, high-quality solutions obtained across GRASP iterations, preventing duplicates and keeping them sorted by objective value[cite: 66, 68].
+   - **Path Relinking Procedure:** Explores trajectory paths between pairs of elite solutions (initiating solution $S_I$ and guiding solution $S_G$) by greedily swapping elements between $A := S_G \setminus S_I$ and $B := S_I \setminus S_G$ to uncover superior local optima[cite: 67].
 
-3. **Calibración Experimental de Hiperparámetros:**
-   - Análisis de sensibilidad numérica sobre 15 instancias de prueba fijando semilla pseudoaleatoria.
-   - Evaluación de $\alpha \in \{0.1, 0.2, \ldots, 0.9\}$ y tamaño de conjunto élite $|E| \in \{5, 10, 15\}$, seleccionando como configuración óptima $\alpha = 0.4$ y $|E| = 10$ para equilibrar codicia, diversidad y coste computacional.
+3. **Hyperparameter Calibration:**
+   - Numerical sensitivity evaluation across 15 benchmark problem instances under a fixed pseudo-random seed[cite: 68].
+   - Systematic exploration of $\alpha \in \{0.1, 0.2, \ldots, 0.9\}$ and elite pool sizes $\vert{}E\vert{} \in \{5, 10, 15\}$, calibrating $\alpha = 0.4$ and $\vert{}E\vert{} = 10$ to strike an effective balance between greediness, population diversity, and computational overhead[cite: 68].
 
-4. **Comparativa y Rendimiento Algorítmico:**
-   - Comparación del valor de la función objetivo sobre instancias pequeñas (100 elementos) y grandes (500 elementos) bajo un límite de tiempo estricto (30 y 60 segundos).
-   - Análisis de convergencia y cuellos de botella computacionales: eficiencia de GRASP básico en instancias pequeñas frente a los requerimientos temporales de GRASP+PR para poblar el conjunto élite en instancias complejas.
-
----
-
-## 📂 Estructura del Código
-
-- `instance.py`: Lectura y procesamiento de las matrices de distancias e instancias del problema.
-- `solution.py`: Estructura de datos para la representación y evaluación de soluciones.
-- `cgrasp.py`: Heurística constructiva aleatorizada (construcción de la RCL).
-- `lsbestimp.py`: Procedimiento de búsqueda local basado en el mejor intercambio (*best-improving swap*).
-- `grasp.py`: Bucle principal de ejecución multiarranque del algoritmo GRASP.
-- `elite.py`: Gestión, filtrado de duplicados y ordenación del conjunto de soluciones élite.
-- `path_relinking.py`: Implementación del algoritmo voraz de Path Relinking.
-- `grasp_pr.py`: Flujo integrado de GRASP con intensificación por Path Relinking y búsqueda local final.
-- `project1.pdf`: Informe técnico completo con el desglose matemático, tablas de resultados y conclusiones.
+4. **Comparative Analysis & Experimental Results:**
+   - Performance benchmark comparing standard GRASP and GRASP+PR on small (100 elements) and large (500 elements) instances under strict computational runtime limits (30s and 60s)[cite: 68, 69, 70].
+   - Algorithmic analysis of convergence and computational bottlenecks: basic GRASP delivers competitive solutions rapidly on smaller instances, whereas GRASP+PR requires extended runtimes to adequately populate the elite pool and complete relinking trajectories on larger instances[cite: 70].
 
 ---
 
-## 👥 Autores
-- **Juan José Berdejo**
-- **Gemma López Coloma**
+## 📂 Repository Structure
 
-*Universitat de València — Enero 2026*
-```[cite: 64, 65, 66, 67, 68, 70, 71]
+- `instance.py`: Parser and data structure for problem instances and distance matrices[cite: 67].
+- `solution.py`: Data structure representing candidate partial and complete solutions[cite: 67].
+- `cgrasp.py`: Randomized constructive heuristic module (RCL construction)[cite: 67].
+- `lsbestimp.py`: Local search
